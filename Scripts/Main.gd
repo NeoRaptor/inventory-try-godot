@@ -8,7 +8,7 @@ extends Node2D
 
 
 func _ready():
-	spawn_random_items(10)
+	spawn_random_items(20)
 	
 
 # Get a random position to spawn the items
@@ -24,9 +24,9 @@ func spawn_random_items(count):
 	var attempts = 0
 	var spawned_count = 0
 	while spawned_count < count and attempts < 100:
-		var position = get_random_position()
+		var itm_position = get_random_position()
 		#call the function to spawn items with a random number
-		spawn_item(Global.spawnable_items[randi() % Global.spawnable_items.size()], position)
+		spawn_item(Global.spawnable_items[randi() % Global.spawnable_items.size()], itm_position)
 		
 		spawned_count += 1
 		attempts += 1
@@ -35,11 +35,11 @@ func spawn_random_items(count):
 
 # Create a physical instance of the item scene on the map underneath  /Items node, one at the time taking data from the 
 # set item data funcion on inventory item?
-func spawn_item(data, position):
+func spawn_item(data, itm_position):
 	var item_scene = preload("res://Scenes/Inventory_Item.tscn")
 	var item_instance = item_scene.instantiate()
 	item_instance.initiate_items(data["type"],data["name"],data["effect"],data["texture"])
-	item_instance.global_position = position
+	item_instance.global_position = itm_position
 	items.add_child(item_instance)
 	print(data["name"])
 	print(str(position))

@@ -1,0 +1,92 @@
+[gd_scene load_steps=4 format=3 uid="uid://d1c3sb1j4n6es"]
+
+[ext_resource type="Script" path="res://Scripts/Test_Matching.gd" id="1_nin3r"]
+[ext_resource type="Texture2D" uid="uid://cay35eiqpm7d3" path="res://assets/Sprites/1.png" id="1_uhyhy"]
+[ext_resource type="FontFile" uid="uid://bi04iecmbt37l" path="res://assets/Fonts/ARCADECLASSIC.TTF" id="2_3qlhj"]
+
+[node name="Shadows_UI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_nin3r")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0823529, 0.0470588, 0.117647, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -187.0
+offset_top = -218.0
+offset_right = 187.0
+offset_bottom = 219.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 64
+
+[node name="Skip_BTN" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "SKIP"
+
+[node name="Give_BTN" type="Button" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "GIVE POTION"
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("1_uhyhy")
+expand_mode = 5
+
+[node name="Shadow_Interact" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="Shadow_Interact"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -137.0
+offset_bottom = -73.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.248051, 0.535576, 0.419239, 1)
+
+[node name="Label" type="Label" parent="Shadow_Interact/ColorRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -65.5
+offset_top = -11.5
+offset_right = 65.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_3qlhj")
+theme_override_font_sizes/font_size = 30
+text = "I need to cool off!"

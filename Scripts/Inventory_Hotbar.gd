@@ -1,10 +1,10 @@
 extends Control
 
 
-@onready var hotbar_container = $HBoxContainer
+@onready var hotbar_container := $HBoxContainer
 
 #Drag and drop variable?
-var dragged_slot = null
+var dragged_slot : Control = null
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -15,7 +15,7 @@ func _ready():
 func _update_hotbar_ui():
 	clear_hotbar_container()
 	for i in range(Global.hotbar_size):
-		var slot = Global.inventory_slot_scene.instantiate()
+		var slot : Control = Global.inventory_slot_scene.instantiate()
 		slot.set_slot_index(i)
 		
 		slot.drag_start.connect(_on_drag_start)
@@ -31,7 +31,7 @@ func _update_hotbar_ui():
 #clear hotbar slots
 func clear_hotbar_container():
 	while hotbar_container.get_child_count() > 0:
-		var child = hotbar_container.get_child(0)
+		var child : Control = hotbar_container.get_child(0)
 		hotbar_container.remove_child(child)
 		child.queue_free()
 
@@ -41,16 +41,16 @@ func _on_drag_start(slot_control : Control):
 	print("Dragging started from slot: ", dragged_slot)
 
 func _on_drag_end():
-	var target_slot = get_slot_under_mouse()
+	var target_slot : Control = get_slot_under_mouse()
 	if target_slot and dragged_slot != target_slot:
 		drop_slot(dragged_slot, target_slot)
 	dragged_slot = null
 
 #Get the current mouse position in the hotbar_container's coordinate system
 func get_slot_under_mouse():
-	var mouse_position = get_global_mouse_position()
-	for slot in hotbar_container.get_children():
-		var slot_rect = Rect2(slot.global_position, slot.size)
+	var mouse_position : Vector2 = get_global_mouse_position()
+	for slot : Control in hotbar_container.get_children():
+		var slot_rect := Rect2(slot.global_position, slot.size)
 		if slot_rect.has_point(mouse_position):
 			return slot
 	return null
@@ -64,8 +64,8 @@ func get_slot_index(slot : Control) -> int:
 	return -1
 
 func drop_slot(slot1 : Control, slot2 : Control):
-	var slot1_index = get_slot_index(slot1)
-	var slot2_index = get_slot_index(slot2)
+	var slot1_index : int = get_slot_index(slot1)
+	var slot2_index : int = get_slot_index(slot2)
 	if slot1_index == -1 or slot2_index == -1:
 		print("Invalid slot found D:")
 		return

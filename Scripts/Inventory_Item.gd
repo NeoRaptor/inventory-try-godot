@@ -39,7 +39,7 @@ func pickup_item():
 		"scene_path": scene_path
 	}
 	if Global.player_node:
-		Global.add_item(item, false)
+		Global.add_item(item, false, false)
 		self.queue_free()
 
 # If player is in range, show UI and make item pickable
@@ -62,9 +62,9 @@ func set_item_data(data):
 	item_texture = data["texture"]
 
 # Function to initiate the items with data dinamically?
-func initiate_items(type, name, effect, texture):
+func initiate_items(type, itm_name, effect, texture):
 	item_type = type
-	item_name = name
+	item_name = itm_name
 	item_effect = effect
 	item_texture = texture
 	

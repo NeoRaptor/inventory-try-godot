@@ -1,0 +1,63 @@
+[gd_scene load_steps=3 format=3 uid="uid://1axi3rdwf43d"]
+
+[ext_resource type="Script" path="res://Scripts/Brew_UI.gd" id="1_eva44"]
+[ext_resource type="PackedScene" uid="uid://dcspgexcdsw3r" path="res://Scenes/Inventory_Slot.tscn" id="1_ilg8x"]
+
+[node name="Brew_UI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_eva44")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -152.0
+offset_right = 152.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 64
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Ingredients:"
+
+[node name="Potion_IN" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 12
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Result:"
+
+[node name="Potion_OUT" type="VBoxContainer" parent="HBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 12
+
+[node name="Inventory_Slot" parent="HBoxContainer/VBoxContainer2/Potion_OUT" instance=ExtResource("1_ilg8x")]
+layout_mode = 2
+
+[node name="CraftButton" type="Button" parent="HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "CREATE!"
+
+[connection signal="pressed" from="HBoxContainer/VBoxContainer2/CraftButton" to="." method="_on_craft_button_pressed"]

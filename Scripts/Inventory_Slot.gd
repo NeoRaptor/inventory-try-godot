@@ -1,19 +1,22 @@
+#Inventory_Slot.gd
+
 extends Control
 
 
 # Scene tree node references for manipulation
 
-@onready var icon =  $InnerBorder/ItemIcon
-@onready var quantity_label = $InnerBorder/ItemQuantity
-@onready var details_panel = $DetailsPanel
-@onready var item_name = $DetailsPanel/ItemName
-@onready var item_type = $DetailsPanel/ItemType
-@onready var item_effect = $DetailsPanel/ItemEffect
-@onready var usage_panel = $UsagePanel
+@onready var icon :=  $InnerBorder/ItemIcon
+@onready var quantity_label := $InnerBorder/ItemQuantity
+@onready var details_panel := $DetailsPanel
+@onready var item_name := $DetailsPanel/ItemName
+@onready var item_type := $DetailsPanel/ItemType
+@onready var item_effect := $DetailsPanel/ItemEffect
+@onready var usage_panel := $UsagePanel
 
-@onready var assign_button = $UsagePanel/AssignButton
+@onready var assign_button := $UsagePanel/VBoxContainer/AssignButton
+@onready var craft_button := $UsagePanel/VBoxContainer/CraftButton
 
-@onready var outer_border = $OuterBorder
+@onready var outer_border := $OuterBorder
 
 #Signas to notify drag status
 signal drag_start(slot)
@@ -21,21 +24,18 @@ signal drag_end()
 
 # Slot item variable and information
 var item = null
-var slot_index = -1
-var is_assigned = false
+var slot_index := -1
+var is_assigned_hotbar := false
+var is_assigned_craftbar := false
 
 #Set index to finally have a real slot available
-func set_slot_index(new_index):
+func set_slot_index(new_index : int):
 	slot_index = new_index
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
 
 
 func _on_item_button_mouse_entered():
@@ -63,17 +63,19 @@ func set_item(new_item):
 	else:
 		item_effect.text = ""
 	update_assigment_status()
+	update_craft_status()
 
 
 
 func _on_drop_button_pressed():
 	if item != null:
-		var drop_position = Global.player_node.global_position
-		var drop_offset = Vector2(0,20)
+		var drop_position : Vector2 = Global.player_node.global_position
+		var drop_offset := Vector2(0,20)
 		drop_offset = drop_offset.rotated(Global.player_node.rotation)
 		Global.drop_item(item, drop_position + drop_offset)
 		Global.remove_item(item["type"],item["effect"])
 		Global.remove_hotbar_item(item["type"],item["effect"])
+		Global.remove_outbar_item(item["type"],item["effect"])
 		usage_panel.visible = false
 
 
@@ -90,8 +92,8 @@ func _on_use_button_pressed():
 
 #Update the assign status text on the assign button
 func update_assigment_status():
-	is_assigned = Global.is_item_assigned_to_hotbar(item)
-	if is_assigned:
+	is_assigned_hotbar = Global.is_item_assigned_to_hotbar(item)
+	if is_assigned_hotbar:
 		assign_button.text = "Unassing"
 	else:
 		assign_button.text = "Assign"
@@ -100,13 +102,21 @@ func update_assigment_status():
 #assigs or unassigns the item to hotbar
 func _on_assign_button_pressed():
 	if item != null:
-		if is_assigned:
+		var inventory_full = false
+		inventory_full = Global.is_hotbar_full()
+		if is_assigned_hotbar:
 			Global.unassign_hotbar_item(item["type"],item["effect"])
-			is_assigned = false
+			is_assigned_hotbar = false
+			print("restando? porque ", inventory_full)
+			Global.hotbar_used -=1
+		elif !is_assigned_hotbar and inventory_full:
+			print("invetorio lleno")
 		else:
-			Global.add_item(item, true)
-			is_assigned = true
+			Global.add_item(item, true, false)
+			is_assigned_hotbar = true
+			print("sumando porque ", inventory_full)
 		update_assigment_status()
+		print(str(Global.hotbar_used))
 
 
 func _on_item_button_gui_input(event):
@@ -121,3 +131,30 @@ func _on_item_button_gui_input(event):
 			else:
 				outer_border.modulate = Color(1,1,1)
 				drag_end.emit()
+
+#Update the assign status text on the assign button
+func update_craft_status():
+	is_assigned_craftbar = Global.is_item_assigned_to_craftbar(item)
+	if is_assigned_craftbar:
+		craft_button.text = "Remove"
+	else:
+		craft_button.text = "Use Ingredient"
+
+func _on_craft_button_pressed():
+	if item != null:
+		var inventory_full = false
+		inventory_full = Global.is_craftbar_full()
+		if is_assigned_craftbar:
+			Global.unassign_craftbar_item(item["type"],item["effect"])
+			is_assigned_craftbar = false
+			print("restando? porque ", inventory_full)
+			Global.craftbar_used -=1
+		elif !is_assigned_craftbar and inventory_full:
+			print("invetorio lleno")
+		else:
+			Global.add_item(item, false, true)
+			is_assigned_craftbar = true
+			print("sumando porque ", inventory_full)
+		update_assigment_status()
+		print(str(Global.hotbar_used))
+

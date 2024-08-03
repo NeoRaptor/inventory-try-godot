@@ -7,6 +7,7 @@ extends CharacterBody2D
 @onready var inventory_ui = $InventoryUI
 
 @onready var inventory_hotbar = $InventoryHotbar
+@onready var inventory_craftbar = $InventoryCraftbar
 
 # Variables
 @export var speed = 200
@@ -21,7 +22,7 @@ func get_input():
 	velocity = input_direction * speed
 
 # Movement & Animation
-func _physics_process(delta):
+func _physics_process(_delta):
 	get_input()
 	move_and_slide()
 	update_animation()
@@ -44,9 +45,46 @@ func update_animation():
 
 func _input(event):
 	if event.is_action_pressed("ui_inventory"):
-		inventory_ui.visible = !inventory_ui.visible
-		get_tree().paused = !get_tree().paused
-		inventory_hotbar.visible = !inventory_hotbar.visible
+		#get_tree().paused = !get_tree().paused
+		
+		if !inventory_ui.visible and inventory_hotbar.visible:
+			inventory_ui.visible = true
+			inventory_craftbar.visible = false
+			inventory_hotbar.visible = false
+			
+			print("inv visible")
+			
+		elif inventory_ui.visible and !inventory_hotbar.visible and !inventory_craftbar.visible:
+			inventory_hotbar.visible = true
+			inventory_ui.visible = false
+			inventory_craftbar.visible = false
+			print("inv hidden")
+			
+		elif !inventory_ui.visible and !inventory_hotbar.visible and inventory_craftbar.visible:
+			inventory_craftbar.visible = false
+			inventory_hotbar.visible = false
+			inventory_ui.visible = true
+			print("inv hidden 2")
+
+		
+	if event.is_action_pressed("ui_interact"):
+		
+		if !inventory_ui.visible and inventory_hotbar.visible:
+			inventory_craftbar.visible = true
+			inventory_hotbar.visible = false
+			print("craft visible")
+			
+		elif inventory_ui.visible and !inventory_hotbar.visible:
+			inventory_hotbar.visible = false
+			inventory_ui.visible = false
+			inventory_craftbar.visible = true
+			print("craft hidden")
+			
+		elif !inventory_ui.visible and !inventory_hotbar.visible and inventory_craftbar:
+			inventory_craftbar.visible = false
+			inventory_hotbar.visible = true
+			inventory_ui.visible = false
+			print("craft hidden 2")
 
 func apply_item_effect(item):
 	match item["effect"]:
